@@ -2,8 +2,8 @@ import AppLoader from './appLoader';
 import { Endpoint, IEverythingResponse, ISourcesResponse, NewsCallback } from '../../types/newsapi';
 
 class AppController extends AppLoader {
-    getSources(callback: NewsCallback<ISourcesResponse>): void {
-        super.getResp(
+    public getSources(callback: NewsCallback<ISourcesResponse>): void {
+        super.getResp<ISourcesResponse>(
             {
                 endpoint: Endpoint.Sources,
             },
@@ -11,7 +11,7 @@ class AppController extends AppLoader {
         );
     }
 
-    getNews(e: Event, callback: NewsCallback<IEverythingResponse>): void {
+    public getNews(e: Event, callback: NewsCallback<IEverythingResponse>): void {
         let target = e.target as HTMLElement | null;
         const newsContainer = e.currentTarget as HTMLElement;
 
@@ -20,7 +20,7 @@ class AppController extends AppLoader {
                 const sourceId = target.getAttribute('data-source-id');
                 if (sourceId && newsContainer.getAttribute('data-source') !== sourceId) {
                     newsContainer.setAttribute('data-source', sourceId);
-                    super.getResp(
+                    super.getResp<IEverythingResponse>(
                         {
                             endpoint: Endpoint.Everything,
                             options: {
