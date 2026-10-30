@@ -1,7 +1,8 @@
 import './sources.css';
+import { SourcePreview } from '../../../types/newsapi';
 
 class Sources {
-    draw(data: Array<Record<string, unknown>>): void {
+    draw(data: SourcePreview[]): void {
         const fragment = document.createDocumentFragment();
         const sourceItemTemp = document.querySelector('#sourceItemTemp') as HTMLTemplateElement | null;
 
@@ -13,10 +14,10 @@ class Sources {
             const sourceClone = sourceItemTemp.content.cloneNode(true) as DocumentFragment;
 
             const name = sourceClone.querySelector('.source__item-name');
-            if (name) name.textContent = (item.name as string | undefined) || '';
+            if (name) name.textContent = item.name;
 
             const sourceItem = sourceClone.querySelector('.source__item');
-            if (sourceItem && typeof item.id === 'string') {
+            if (sourceItem) {
                 sourceItem.setAttribute('data-source-id', item.id);
             }
 

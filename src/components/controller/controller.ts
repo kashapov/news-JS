@@ -1,16 +1,17 @@
 import AppLoader from './appLoader';
+import { Endpoint, IEverythingResponse, ISourcesResponse, NewsCallback } from '../../types/newsapi';
 
 class AppController extends AppLoader {
-    getSources(callback: (data: unknown) => void): void {
+    getSources(callback: NewsCallback<ISourcesResponse>): void {
         super.getResp(
             {
-                endpoint: 'sources',
+                endpoint: Endpoint.Sources,
             },
             callback
         );
     }
 
-    getNews(e: Event, callback: (data: unknown) => void): void {
+    getNews(e: Event, callback: NewsCallback<IEverythingResponse>): void {
         let target = e.target as HTMLElement | null;
         const newsContainer = e.currentTarget as HTMLElement;
 
@@ -21,7 +22,7 @@ class AppController extends AppLoader {
                     newsContainer.setAttribute('data-source', sourceId);
                     super.getResp(
                         {
-                            endpoint: 'everything',
+                            endpoint: Endpoint.Everything,
                             options: {
                                 sources: sourceId,
                             },

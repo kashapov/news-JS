@@ -1,5 +1,6 @@
 import News from './news/news';
 import Sources from './sources/sources';
+import { IEverythingResponse, ISourcesResponse } from '../../types/newsapi';
 
 export class AppView {
     news: News;
@@ -10,15 +11,13 @@ export class AppView {
         this.sources = new Sources();
     }
 
-    drawNews(data: unknown): void {
-        const payload = data as { articles?: Array<Record<string, unknown>> } | null | undefined;
-        const values = payload?.articles ? payload.articles : [];
+    drawNews(data: IEverythingResponse): void {
+        const values = data?.articles ? data.articles : [];
         this.news.draw(values);
     }
 
-    drawSources(data: unknown): void {
-        const payload = data as { sources?: Array<Record<string, unknown>> } | null | undefined;
-        const values = payload?.sources ? payload.sources : [];
+    drawSources(data: ISourcesResponse): void {
+        const values = data?.sources ? data.sources : [];
         this.sources.draw(values);
     }
 }

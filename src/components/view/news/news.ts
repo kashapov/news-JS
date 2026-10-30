@@ -1,7 +1,8 @@
 import './news.css';
+import { ArticlePreview } from '../../../types/newsapi';
 
 class News {
-    draw(data: Array<Record<string, unknown>>): void {
+    draw(data: ArticlePreview[]): void {
         const news = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
 
         const fragment = document.createDocumentFragment();
@@ -18,33 +19,30 @@ class News {
 
             const photo = newsClone.querySelector('.news__meta-photo') as HTMLElement | null;
             if (photo) {
-                photo.style.backgroundImage = `url(${
-                    (item.urlToImage as string | null | undefined) || 'img/news_placeholder.jpg'
-                })`;
+                photo.style.backgroundImage = `url(${item.urlToImage || 'img/news_placeholder.jpg'})`;
             }
 
             const author = newsClone.querySelector('.news__meta-author');
-            const source = item.source as { name?: string } | undefined;
             if (author) {
-                author.textContent = (item.author as string | null | undefined) || source?.name || '';
+                author.textContent = item.author || item.source.name;
             }
 
             const date = newsClone.querySelector('.news__meta-date');
-            if (date && typeof item.publishedAt === 'string') {
+            if (date) {
                 date.textContent = item.publishedAt.slice(0, 10).split('-').reverse().join('-');
             }
 
             const title = newsClone.querySelector('.news__description-title');
-            if (title) title.textContent = (item.title as string | undefined) || '';
+            if (title) title.textContent = item.title;
 
             const sourceEl = newsClone.querySelector('.news__description-source');
-            if (sourceEl) sourceEl.textContent = source?.name || '';
+            if (sourceEl) sourceEl.textContent = item.source.name;
 
             const content = newsClone.querySelector('.news__description-content');
-            if (content) content.textContent = (item.description as string | null | undefined) || '';
+            if (content) content.textContent = item.description || '';
 
             const link = newsClone.querySelector('.news__read-more a');
-            if (link && typeof item.url === 'string') {
+            if (link) {
                 link.setAttribute('href', item.url);
             }
 
