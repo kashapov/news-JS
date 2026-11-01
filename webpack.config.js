@@ -2,13 +2,21 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const DotenvWebpackPlugin = require('dotenv-webpack');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+
+const { parsed: env = {} } = dotenv.config();
 
 const baseConfig = {
-    entry: path.resolve(__dirname, './src/index.js'),
+    entry: path.resolve(__dirname, './src/index.ts'),
     mode: 'development',
     module: {
         rules: [
+            {
+                test: /\.ts$/i,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
@@ -16,14 +24,13 @@ const baseConfig = {
         ],
     },
     resolve: {
-        extensions: ['.js'],
+        extensions: ['.ts', '.js'],
     },
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, './dist'),
     },
     plugins: [
-        new DotenvWebpackPlugin(),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, './src/index.html'),
             filename: 'index.html',
@@ -35,6 +42,14 @@ const baseConfig = {
 module.exports = ({ mode }) => {
     const isProductionMode = mode === 'prod';
     const envConfig = isProductionMode ? require('./webpack.prod.config') : require('./webpack.dev.config');
+    const apiUrl = isProductionMode ? 'https://rss-news-api.onrender.com/' : env.API_URL;
 
-    return merge(baseConfig, envConfig);
+    return merge(baseConfig, envConfig, {
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env.API_URL': JSON.stringify(apiUrl),
+                'process.env.API_KEY': JSON.stringify(env.API_KEY),
+            }),
+        ],
+    });
 };
