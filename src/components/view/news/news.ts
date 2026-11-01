@@ -3,7 +3,6 @@ import { ArticlePreview } from '../../../types/newsapi';
 
 class News {
     private static readonly MAX_ITEMS = 10;
-    private static readonly PLACEHOLDER_IMAGE = 'img/news_placeholder.jpg';
     private static readonly SKELETON_COUNT = 3;
 
     public draw(data: ReadonlyArray<ArticlePreview>): void {
@@ -84,8 +83,8 @@ class News {
         if (idx % 2) newsClone.querySelector('.news__item')?.classList.add('alt');
 
         const photo = newsClone.querySelector('.news__meta-photo') as HTMLElement | null;
-        if (photo) {
-            photo.style.backgroundImage = `url(${item.urlToImage || News.PLACEHOLDER_IMAGE})`;
+        if (photo && item.urlToImage) {
+            photo.style.backgroundImage = `url(${item.urlToImage})`;
         }
 
         const author = newsClone.querySelector('.news__meta-author');
