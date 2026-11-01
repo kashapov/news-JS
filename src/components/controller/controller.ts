@@ -11,7 +11,7 @@ class AppController extends AppLoader {
         );
     }
 
-    public getNews(e: Event, callback: NewsCallback<IEverythingResponse>): void {
+    public getNews(e: Event, callback: NewsCallback<IEverythingResponse>, onRequestStart?: () => void): void {
         let target = e.target as HTMLElement | null;
         const newsContainer = e.currentTarget as HTMLElement;
 
@@ -20,6 +20,7 @@ class AppController extends AppLoader {
                 const sourceId = target.getAttribute('data-source-id');
                 if (sourceId && newsContainer.getAttribute('data-source') !== sourceId) {
                     newsContainer.setAttribute('data-source', sourceId);
+                    onRequestStart?.();
                     super.getResp<IEverythingResponse>(
                         {
                             endpoint: Endpoint.Everything,

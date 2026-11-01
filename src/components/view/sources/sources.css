@@ -52,9 +52,22 @@
     white-space: nowrap;
 }
 
+.source-skeleton {
+    flex: 0 0 auto;
+    width: 7.5rem;
+    height: 2.4rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+}
+
 @media (max-width: 360px) {
     .source__item {
         padding: 0.6rem 0.85rem;
         font-size: 0.85rem;
+    }
+
+    .source-skeleton {
+        width: 6.25rem;
+        height: 2.15rem;
     }
 }

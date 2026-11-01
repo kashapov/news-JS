@@ -4,6 +4,7 @@ import { ArticlePreview } from '../../../types/newsapi';
 class News {
     private static readonly MAX_ITEMS = 10;
     private static readonly PLACEHOLDER_IMAGE = 'img/news_placeholder.jpg';
+    private static readonly SKELETON_COUNT = 3;
 
     public draw(data: ReadonlyArray<ArticlePreview>): void {
         const news = data.length >= News.MAX_ITEMS ? data.filter((_item, idx) => idx < News.MAX_ITEMS) : data;
@@ -21,13 +22,62 @@ class News {
             fragment.append(newsClone);
         });
 
+        this.replaceContent(fragment);
+    }
+
+    public drawSkeleton(): void {
+        const fragment = document.createDocumentFragment();
+
+        for (let i = 0; i < News.SKELETON_COUNT; i += 1) {
+            fragment.append(this.createSkeletonCard());
+        }
+
+        this.replaceContent(fragment);
+    }
+
+    private createSkeletonCard(): HTMLElement {
+        const card = document.createElement('div');
+        card.className = 'news-skeleton';
+        card.setAttribute('aria-hidden', 'true');
+
+        const photo = document.createElement('div');
+        photo.className = 'news-skeleton__photo shimmer';
+
+        const body = document.createElement('div');
+        body.className = 'news-skeleton__body';
+
+        const lineClasses = [
+            'news-skeleton__line news-skeleton__line--title shimmer',
+            'news-skeleton__line news-skeleton__line--source shimmer',
+            'news-skeleton__line news-skeleton__line--text shimmer',
+            'news-skeleton__line news-skeleton__line--text shimmer',
+        ];
+
+        lineClasses.forEach((className: string) => {
+            const line = document.createElement('div');
+            line.className = className;
+            body.append(line);
+        });
+
+        card.append(photo, body);
+        return card;
+    }
+
+    public drawMessage(text: string): void {
+        const message = document.createElement('p');
+        message.className = 'state-message';
+        message.textContent = text;
+        this.replaceContent(message);
+    }
+
+    private replaceContent(content: Node): void {
         const newsContainer = document.querySelector('.news');
         if (!newsContainer) {
             return;
         }
 
         newsContainer.innerHTML = '';
-        newsContainer.appendChild(fragment);
+        newsContainer.append(content);
     }
 
     private fillArticle(newsClone: DocumentFragment, item: ArticlePreview, idx: number): void {

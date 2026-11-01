@@ -12,10 +12,21 @@ class App {
     }
 
     public start(): void {
+        this.view.showSourcesLoading();
+        this.view.showNewsIdle();
+
         document.querySelector('.sources')?.addEventListener('click', (e: Event) => {
-            this.controller.getNews(e, (data: IEverythingResponse) => this.view.drawNews(data));
+            this.controller.getNews(
+                e,
+                (data: IEverythingResponse) => this.view.drawNews(data),
+                () => this.view.showNewsLoading()
+            );
         });
-        this.controller.getSources((data: ISourcesResponse) => this.view.drawSources(data));
+
+        this.controller.getSources((data: ISourcesResponse) => {
+            this.view.drawSources(data);
+            this.view.showNewsIdle();
+        });
     }
 }
 

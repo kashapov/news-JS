@@ -2,6 +2,8 @@ import './sources.css';
 import { SourcePreview } from '../../../types/newsapi';
 
 class Sources {
+    private static readonly SKELETON_COUNT = 8;
+
     public draw(data: ReadonlyArray<SourcePreview>): void {
         const fragment = document.createDocumentFragment();
         const sourceItemTemp = document.querySelector('#sourceItemTemp') as HTMLTemplateElement | null;
@@ -16,7 +18,37 @@ class Sources {
             fragment.append(sourceClone);
         });
 
-        document.querySelector('.sources')?.append(fragment);
+        this.replaceContent(fragment);
+    }
+
+    public drawSkeleton(): void {
+        const fragment = document.createDocumentFragment();
+
+        for (let i = 0; i < Sources.SKELETON_COUNT; i += 1) {
+            const chip = document.createElement('div');
+            chip.className = 'source-skeleton shimmer';
+            chip.setAttribute('aria-hidden', 'true');
+            fragment.append(chip);
+        }
+
+        this.replaceContent(fragment);
+    }
+
+    public drawMessage(text: string): void {
+        const message = document.createElement('p');
+        message.className = 'state-message state-message--inline';
+        message.textContent = text;
+        this.replaceContent(message);
+    }
+
+    private replaceContent(content: Node): void {
+        const sourcesContainer = document.querySelector('.sources');
+        if (!sourcesContainer) {
+            return;
+        }
+
+        sourcesContainer.innerHTML = '';
+        sourcesContainer.append(content);
     }
 
     private fillSource(sourceClone: DocumentFragment, item: SourcePreview): void {
