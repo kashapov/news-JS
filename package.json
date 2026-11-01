@@ -6,17 +6,19 @@
     "scripts": {
         "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
         "build": "webpack --config ./webpack.config.js --env mode=prod",
-        "lint": "eslint . --ext .ts"
+        "lint": "eslint . --ext .ts",
+        "deploy": "npm run build && gh-pages -d dist -m \"Deploy production build to GitHub Pages\""
     },
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://github.com/kashapov/news-JS.git"
     },
     "keywords": [],
     "author": "Aleh Serhiyenia",
     "license": "ISC",
-    "homepage": "",
+    "homepage": "https://kashapov.github.io/news-JS",
     "devDependencies": {
+        "gh-pages": "^6.3.0",
         "@types/node": "^26.6.6",
         "@typescript-eslint/eslint-plugin": "^8.72.1",
         "@typescript-eslint/parser": "^8.72.1",
